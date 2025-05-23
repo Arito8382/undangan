@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Guest Book Invitation</title>
+  <link rel="stylesheet" href="input.css">
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Open+Sans&display=swap" rel="stylesheet">
+</head>
+<body class="buku-tamu-page">
+
+  <div class="overlay"></div>
+  <div class="container">
+    <h1 class="judul">Guest Book Invitation</h1>
+
+    <input type="text" id="cari" placeholder="Find a guest name..." onkeyup="filterNama()">
+    <a href="input.html" class="btn">+ add new guest</a>
+<table id="tamuTable" class="tamu-table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Address</th>
+      <th>Phone number</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+<br>
+<h2>Guest greeting</h2>
+<table id="ucapanTable" class="tamu-table">
+  <thead>
+    <tr>
+      <th>Greeting</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+
+  </tbody>
+</table>
+
+  </div>
+
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <p id="modalText">Yakin ingin menghapus tamu ini?</p>
+      <div class="modal-buttons">
+        <button onclick="hapusTamu()">Hapus</button>
+        <button onclick="tutupModal()">Batal</button>
+      </div>
+    </div>
+  </div>
+<script>
+  window.onload = function() {
+    const dataTamu = JSON.parse(localStorage.getItem("dataTamu")) || [];
+    const dataUcapan = JSON.parse(localStorage.getItem("dataUcapan")) || [];
+
+    const tamuTable = document.getElementById("tamuTable").getElementsByTagName('tbody')[0];
+    const ucapanTable = document.getElementById("ucapanTable").getElementsByTagName('tbody')[0];
+
+    dataTamu.forEach(function(tamu, index) {
+      const row = tamuTable.insertRow();
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${tamu.nama}</td>
+        <td>${tamu.alamat}</td>
+        <td>${tamu.hp}</td>
+        <td><button onclick="hapusTamu(${tamu.id})">Hapus</button></td>
+      `;
+    });
+
+    dataUcapan.forEach(function(ucapan) {
+  const row = ucapanTable.insertRow();
+  row.innerHTML = `
+    <td>${ucapan.ucapan}</td>
+    <td><button onclick="hapusUcapan(${ucapan.id})">Hapus</button></td>
+  `;
+});
+  };
+
+  function hapusUcapan(id) {
+    let dataUcapan = JSON.parse(localStorage.getItem("dataUcapan")) || [];
+    dataUcapan = dataUcapan.filter(ucapan => ucapan.id !== id);
+    localStorage.setItem("dataUcapan", JSON.stringify(dataUcapan));
+    alert("Ucapan berhasil dihapus!");
+    location.reload();
+  }
+
+  function hapusTamu(id) {
+    let dataTamu = JSON.parse(localStorage.getItem("dataTamu")) || [];
+    let dataUcapan = JSON.parse(localStorage.getItem("dataUcapan")) || [];
+
+    dataTamu = dataTamu.filter(tamu => tamu.id !== id);
+    dataUcapan = dataUcapan.filter(ucapan => ucapan.id !== id);
+
+    localStorage.setItem("dataTamu", JSON.stringify(dataTamu));
+    localStorage.setItem("dataUcapan", JSON.stringify(dataUcapan));
+    alert("Tamu dan ucapannya berhasil dihapus!");
+    location.reload();
+  }
+</script>
+ 
+</body>
+</html>
